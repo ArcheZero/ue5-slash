@@ -42,6 +42,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input)
 	UInputAction* LookAction;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input)
+	UInputAction* JumpAction;
+
 private:
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* SpringArm;
