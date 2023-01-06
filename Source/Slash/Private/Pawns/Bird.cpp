@@ -9,8 +9,8 @@
 #include "Components/InputComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-//#include "InputMappingContext.h"
-//#include "InputAction.h"
+#include "InputMappingContext.h"
+#include "InputAction.h"
 
 ABird::ABird()
 {
@@ -33,8 +33,6 @@ ABird::ABird()
 
 	bUseControllerRotationYaw = true;
 	bUseControllerRotationPitch = true;
-
-	AutoPossessPlayer = EAutoReceiveInput::Player0;
 }
 
 void ABird::BeginPlay()
