@@ -12,8 +12,8 @@ UCLASS()
 class SLASH_API AItem : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	AItem();
 	virtual void Tick(float DeltaTime) override;
 
@@ -45,10 +45,10 @@ protected:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Sine Parameters")
 	float RunningTime;
 
-private:
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UStaticMeshComponent* ItemMesh;
 
+private:
 	UPROPERTY(VisibleAnywhere)
 	USphereComponent* Sphere;
 
