@@ -74,6 +74,7 @@ Plugins/*/Intermediate/*
 DerivedDataCache/*
 
 # Assets
+Assets/*
 Content/BlackAlder/*
 Content/Megascans/*
 Content/MSPresets/MS_Foliage_Material/*
