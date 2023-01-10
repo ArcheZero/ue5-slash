@@ -14,6 +14,7 @@ class UGroomComponent;
 class UInputMappingContext;
 class UInputAction;
 class AItem;
+class UAnimMontage;
 
 UCLASS()
 class SLASH_API ASlashCharacter : public ACharacter
@@ -30,9 +31,17 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	// Callbacks for input:
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void Interact(const FInputActionValue& Value);
+	void Attack(const FInputActionValue& Value);
+
+	// Montage methods:
+	void PlayAttackMontage();
+
+	UFUNCTION(BlueprintCallable)
+	void AttackEnd();
 
 // Member variables:
 protected:
@@ -51,10 +60,19 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input)
 	UInputAction* InteractAction;
 
-private:
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input)
+	UInputAction* AttackAction;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Montages)
+	UAnimMontage* AttackMontage;
+
+	UPROPERTY(BlueprintReadOnly)
 	ECharacterState CharacterState = ECharacterState::Unarmed;
 
+	UPROPERTY(BlueprintReadWrite)
+	EActionState ActionState = EActionState::Unoccupied;
+
+private:
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* SpringArm;
 
