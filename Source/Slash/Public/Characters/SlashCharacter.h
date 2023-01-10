@@ -43,6 +43,9 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void AttackEnd();
 
+	UFUNCTION(BlueprintCallable)
+	bool CanAttack();
+
 // Member variables:
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input)

@@ -79,6 +79,8 @@ void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 void ASlashCharacter::Move(const FInputActionValue& Value)
 {
+	if (ActionState == EActionState::Attacking) return;
+
 	const FVector2D MovementVector = Value.Get<FVector2D>();
 
 	const FRotator ControlRotation = GetControlRotation();
@@ -110,7 +112,7 @@ void ASlashCharacter::Interact(const FInputActionValue& Value)
 
 void ASlashCharacter::Attack(const FInputActionValue& Value)
 {
-	if (ActionState == EActionState::Unoccupied && CharacterState != ECharacterState::Unarmed)
+	if (CanAttack())
 	{
 		PlayAttackMontage();
 		ActionState = EActionState::Attacking;
@@ -145,4 +147,9 @@ void ASlashCharacter::PlayAttackMontage()
 void ASlashCharacter::AttackEnd()
 {
 	ActionState = EActionState::Unoccupied;
+}
+
+bool ASlashCharacter::CanAttack()
+{
+	return ActionState == EActionState::Unoccupied && CharacterState != ECharacterState::Unarmed;
 }
