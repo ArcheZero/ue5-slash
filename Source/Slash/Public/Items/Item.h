@@ -56,9 +56,10 @@ protected:
 
 	EItemState ItemState = EItemState::Hovering;
 
-private:
 	UPROPERTY(VisibleAnywhere)
 	USphereComponent* Sphere;
+
+private:	
 
 };
 

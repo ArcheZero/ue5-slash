@@ -14,6 +14,7 @@ class UGroomComponent;
 class UInputMappingContext;
 class UInputAction;
 class AItem;
+class AWeapon;
 class UAnimMontage;
 
 UCLASS()
@@ -31,23 +32,46 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	// Callbacks for input:
+	/*
+	* Input callbacks
+	*/
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void Interact(const FInputActionValue& Value);
 	void Attack(const FInputActionValue& Value);
 
-	// Montage methods:
+	UFUNCTION(BlueprintCallable)
+	void FinishEquipping();
+
+	/*
+	* Montages
+	*/
 	void PlayAttackMontage();
+	void PlayEquipMontage(FName SectionName);
 
 	UFUNCTION(BlueprintCallable)
 	void AttackEnd();
 
 	UFUNCTION(BlueprintCallable)
+	void Disarm();
+
+	UFUNCTION(BlueprintCallable)
+	void Arm();
+
+	UFUNCTION(BlueprintCallable)
 	bool CanAttack();
+
+	UFUNCTION(BlueprintCallable)
+	bool CanDisarm();
+
+	UFUNCTION(BlueprintCallable)
+	bool CanArm();
 
 // Member variables:
 protected:
+	/*
+	* Input mapping and actions
+	*/
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input)
 	UInputMappingContext* SlashContext;
 
@@ -66,9 +90,18 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input)
 	UInputAction* AttackAction;
 
+	/*
+	* Animation montages
+	*/
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Montages)
 	UAnimMontage* AttackMontage;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Montages)
+	UAnimMontage* EquipMontage;
+
+	/*
+	* States
+	*/
 	UPROPERTY(BlueprintReadOnly)
 	ECharacterState CharacterState = ECharacterState::Unarmed;
 
@@ -90,6 +123,9 @@ private:
 
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* OverlappingItem;
+
+	UPROPERTY(VisibleAnywhere, Category = Weapon)
+	AWeapon* EquippedWeapon;
 
 // Getters and setters:
 public:

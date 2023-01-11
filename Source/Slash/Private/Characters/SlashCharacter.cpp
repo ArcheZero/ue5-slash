@@ -79,7 +79,7 @@ void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 void ASlashCharacter::Move(const FInputActionValue& Value)
 {
-	if (ActionState == EActionState::Attacking) return;
+	if (ActionState != EActionState::Unoccupied) return;
 
 	const FVector2D MovementVector = Value.Get<FVector2D>();
 
@@ -107,6 +107,23 @@ void ASlashCharacter::Interact(const FInputActionValue& Value)
 	{
 		OverlappingWeapon->Equip(GetMesh(), FName("RightHandSocket"));
 		CharacterState = ECharacterState::OneHandedWeapon;
+		OverlappingItem = nullptr;
+		EquippedWeapon = OverlappingWeapon;
+	}
+	else
+	{
+		if (CanDisarm())
+		{
+			PlayEquipMontage(FName("Unequip"));
+			CharacterState = ECharacterState::Unarmed;
+			ActionState = EActionState::EquippingWeapon;
+		}
+		else if (CanArm())
+		{
+			PlayEquipMontage(FName("Equip"));
+			CharacterState = ECharacterState::OneHandedWeapon;
+			ActionState = EActionState::EquippingWeapon;
+		}
 	}
 }
 
@@ -117,6 +134,11 @@ void ASlashCharacter::Attack(const FInputActionValue& Value)
 		PlayAttackMontage();
 		ActionState = EActionState::Attacking;
 	}
+}
+
+void ASlashCharacter::FinishEquipping()
+{
+	ActionState = EActionState::Unoccupied;
 }
 
 void ASlashCharacter::PlayAttackMontage()
@@ -144,12 +166,48 @@ void ASlashCharacter::PlayAttackMontage()
 	}
 }
 
+void ASlashCharacter::PlayEquipMontage(FName SectionName)
+{
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance && EquipMontage)
+	{
+		AnimInstance->Montage_Play(EquipMontage);
+		AnimInstance->Montage_JumpToSection(SectionName, EquipMontage);
+	}
+}
+
 void ASlashCharacter::AttackEnd()
 {
 	ActionState = EActionState::Unoccupied;
 }
 
+void ASlashCharacter::Disarm()
+{
+	if (EquippedWeapon)
+	{
+		EquippedWeapon->AttachMeshToSocket(GetMesh(), FName("SpineSocket"));
+	}
+}
+
+void ASlashCharacter::Arm()
+{
+	if (EquippedWeapon)
+	{
+		EquippedWeapon->AttachMeshToSocket(GetMesh(), FName("RightHandSocket"));
+	}
+}
+
 bool ASlashCharacter::CanAttack()
 {
 	return ActionState == EActionState::Unoccupied && CharacterState != ECharacterState::Unarmed;
+}
+
+bool ASlashCharacter::CanDisarm()
+{
+	return ActionState == EActionState::Unoccupied && CharacterState != ECharacterState::Unarmed;
+}
+
+bool ASlashCharacter::CanArm()
+{
+	return ActionState == EActionState::Unoccupied && CharacterState == ECharacterState::Unarmed && EquippedWeapon;
 }
