@@ -7,6 +7,7 @@
 #include "Weapon.generated.h"
 
 class USoundBase;
+class UBoxComponent;
 
 /**
  * 
@@ -18,18 +19,38 @@ class SLASH_API AWeapon : public AItem
 
 //Member functions:
 public:
+	AWeapon();
+
 	void Equip(USceneComponent* InParent, FName InSocketName);
 
     void AttachMeshToSocket(USceneComponent* InParent, const FName& InSocketName);
 
 protected:
+	virtual void BeginPlay() override;
+
 	virtual void OnBeginSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
 
 	virtual void OnEndSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) override;
+
+	UFUNCTION()
+	void OnBeginCollisionBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 // Member variables:
 protected:
 	UPROPERTY(EditAnywhere, Category = "Weapon Properties")
 	USoundBase* EquipSound;
+
+	UPROPERTY(VisibleAnywhere, Category = "Weapon Properties")
+	UBoxComponent* WeaponBox;
+
+	UPROPERTY(VisibleAnywhere)
+	USceneComponent* BoxTraceStart;
+
+	UPROPERTY(VisibleAnywhere)
+	USceneComponent* BoxTraceEnd;
+
+// Getters and setters:
+public:
+	FORCEINLINE UBoxComponent* GetWeaponBox() const { return WeaponBox; }
 
 };
