@@ -81,6 +81,10 @@ void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 void ASlashCharacter::SetWeaponCollisionEnabled(ECollisionEnabled::Type CollisionEnabled)
 {
 	EquippedWeapon->GetWeaponBox()->SetCollisionEnabled(CollisionEnabled);
+	if (! CollisionEnabled)
+	{
+		EquippedWeapon->CollisionDisabled();
+	}
 }
 
 void ASlashCharacter::Move(const FInputActionValue& Value)

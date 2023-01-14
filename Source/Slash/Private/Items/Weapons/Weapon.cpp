@@ -7,6 +7,7 @@
 #include "Components/SphereComponent.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Interfaces/HitInterface.h"
 
 AWeapon::AWeapon()
 {
@@ -44,6 +45,11 @@ void AWeapon::AttachMeshToSocket(USceneComponent* InParent, const FName& InSocke
 	ItemMesh->AttachToComponent(InParent, TransformRules, InSocketName);
 }
 
+void AWeapon::CollisionDisabled()
+{
+	IgnoreActors.Empty();
+}
+
 void AWeapon::OnBeginSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	Super::OnBeginSphereOverlap(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
@@ -63,7 +69,6 @@ void AWeapon::OnBeginCollisionBoxOverlap(UPrimitiveComponent* OverlappedComponen
 	const FVector Start = BoxTraceStart->GetComponentLocation();
 	const FVector End = BoxTraceEnd->GetComponentLocation();
 
-	TArray<AActor*> ActorsToIgnore;
 	FHitResult BoxHit;
 	UKismetSystemLibrary::BoxTraceSingle(
 		this,
@@ -73,9 +78,18 @@ void AWeapon::OnBeginCollisionBoxOverlap(UPrimitiveComponent* OverlappedComponen
 		BoxTraceStart->GetComponentRotation(),
 		ETraceTypeQuery::TraceTypeQuery1,
 		false,
-		ActorsToIgnore,
-		EDrawDebugTrace::ForDuration,
+		IgnoreActors,
+		EDrawDebugTrace::None,
 		BoxHit,
 		true
 	);
+
+	if (AActor* HitActor = BoxHit.GetActor())
+	{
+		if (IHitInterface* HitInterface = Cast<IHitInterface>(HitActor))
+		{
+			HitInterface->GetHit(BoxHit.ImpactPoint);
+		}
+		IgnoreActors.AddUnique(HitActor);
+	}
 }

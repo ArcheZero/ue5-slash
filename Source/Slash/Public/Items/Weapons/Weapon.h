@@ -25,6 +25,8 @@ public:
 
     void AttachMeshToSocket(USceneComponent* InParent, const FName& InSocketName);
 
+	void CollisionDisabled();
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -48,6 +50,8 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	USceneComponent* BoxTraceEnd;
+
+	TArray<AActor*> IgnoreActors;
 
 // Getters and setters:
 public:
