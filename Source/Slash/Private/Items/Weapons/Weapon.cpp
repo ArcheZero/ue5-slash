@@ -88,8 +88,10 @@ void AWeapon::OnBeginCollisionBoxOverlap(UPrimitiveComponent* OverlappedComponen
 	{
 		if (IHitInterface* HitInterface = Cast<IHitInterface>(HitActor))
 		{
-			HitInterface->GetHit(BoxHit.ImpactPoint);
+			HitInterface->Execute_GetHit(BoxHit.GetActor(), BoxHit.ImpactPoint);
 		}
 		IgnoreActors.AddUnique(HitActor);
+
+		CreateFields(BoxHit.ImpactPoint);
 	}
 }

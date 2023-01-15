@@ -50,7 +50,7 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
-void AEnemy::GetHit(const FVector& ImpactPoint)
+void AEnemy::GetHit_Implementation(const FVector& ImpactPoint)
 {
 	DirectionalHitReact(ImpactPoint);
 	
@@ -76,7 +76,7 @@ void AEnemy::DirectionalHitReact(const FVector& ImpactPoint)
 	{
 		Theta *= -1.f;
 	}
-	UKismetSystemLibrary::DrawDebugArrow(this, ActorLocation, ActorLocation + CrossProduct * 100.f, 5.f, FColor::Purple, 5.f);
+	//UKismetSystemLibrary::DrawDebugArrow(this, ActorLocation, ActorLocation + CrossProduct * 100.f, 5.f, FColor::Purple, 5.f);
 
 	FName SectionName("FromBack");
 
